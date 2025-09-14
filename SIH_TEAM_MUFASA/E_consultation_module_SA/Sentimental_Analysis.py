@@ -4,13 +4,13 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import os
-import nltk
 import os
+import nltk
 
-# Tell NLTK to look for corpora/tokenizers inside the local project folder
-NLTK_DATA_DIR = os.path.join(os.getcwd(), "nltk_data")
+# Path where nltk_data is stored (relative to your script)
+NLTK_DATA_DIR = os.path.join(os.path.dirname(__file__), "nltk_data")
 nltk.data.path.append(NLTK_DATA_DIR)
-)
+
 
 from wordcloud import WordCloud
 from textblob import TextBlob
@@ -22,9 +22,6 @@ import pathlib
 import re
 import string
 from bs4 import BeautifulSoup
-
-# NLTK setup
-nltk.download("punkt")
 
 # -------------------------------
 # MongoDB Connection
@@ -548,6 +545,7 @@ elif st.session_state.page == "About":
         </ul>
     </div>
     """, unsafe_allow_html=True)
+
 
 
 
