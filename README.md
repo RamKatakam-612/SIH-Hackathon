@@ -39,11 +39,14 @@ It was developed as a **Hackathon Project** to analyze IMDB reviews and MCA E-Co
 ---
 
 ## 📂 Project Structure  
-├── Final_WeScrapIMDB.ipynb # Jupyter notebook for IMDB data scraping
-├── Sentimental_Analysis.py # Main Streamlit app
-├── imdb_sample.csv # Sample dataset
-├── style.css # Custom styling
-└── requirements.txt # Dependencies
+
+```text
+├── Final_WeScrapIMDB.ipynb   # Jupyter notebook for IMDB data scraping  
+├── Sentimental_Analysis.py   # Main Streamlit app  
+├── imdb_sample.csv           # Sample dataset  
+├── style.css                 # Custom styling  
+└── requirements.txt          # Dependencies  
+
 
 ---
 
