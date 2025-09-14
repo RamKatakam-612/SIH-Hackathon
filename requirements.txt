@@ -1,0 +1,10 @@
+streamlit
+matplotlib
+wordcloud
+textblob
+transformers
+torch
+nltk
+pymongo
+pandas
+beautifulsoup4
