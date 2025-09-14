@@ -7,11 +7,14 @@ import os
 import os
 import nltk
 
-# Path where nltk_data is stored (relative to your script)
 NLTK_DATA_DIR = os.path.join(os.path.dirname(__file__), "nltk_data")
 nltk.data.path.append(NLTK_DATA_DIR)
 
+# If running from Streamlit root (adjust if needed)
+if not os.path.exists(os.path.join(NLTK_DATA_DIR, "corpora", "wordnet")):
+    nltk.data.path.append(os.path.join(os.path.dirname(__file__), "SIH_TEAM_MUFASA", "E_consultation_module_SA", "nltk_data"))
 
+st.write("NLTK paths:", nltk.data.path)  # ✅ Debug only
 from wordcloud import WordCloud
 from textblob import TextBlob
 from transformers import pipeline
@@ -545,6 +548,7 @@ elif st.session_state.page == "About":
         </ul>
     </div>
     """, unsafe_allow_html=True)
+
 
 
 
