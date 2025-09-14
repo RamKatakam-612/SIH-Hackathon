@@ -5,10 +5,6 @@ import streamlit as st
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 import nltk
-# make sure these corpora are present at runtime
-nltk.download('wordnet')
-nltk.download('omw-1.4')  # for WordNetLemmatizer translations etc.
-nltk.download('punkt')    # if you also tokenize text
 from textblob import TextBlob
 from transformers import pipeline
 from datetime import datetime
@@ -544,5 +540,6 @@ elif st.session_state.page == "About":
         </ul>
     </div>
     """, unsafe_allow_html=True)
+
 
 
