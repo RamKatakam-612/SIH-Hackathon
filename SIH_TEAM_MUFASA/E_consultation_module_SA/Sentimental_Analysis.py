@@ -21,10 +21,10 @@ nltk.download("punkt")
 # -------------------------------
 # MongoDB Connection
 # -------------------------------
-MONGO_URI = "mongodb://localhost:27017"   # replace with Atlas URI if cloud
+'''MONGO_URI = "mongodb://localhost:27017"   # replace with Atlas URI if cloud
 client = pymongo.MongoClient(MONGO_URI)
 db = client["sentiment_dashboard"]
-collection = db["analyses"]
+collection = db["analyses"]'''
 
 # -------------------------------
 # Load CSS
@@ -540,3 +540,4 @@ elif st.session_state.page == "About":
         </ul>
     </div>
     """, unsafe_allow_html=True)
+
