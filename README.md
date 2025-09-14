@@ -73,3 +73,35 @@ MONGO_URI = "mongodb://localhost:27017"
 ```bash
 streamlit run Sentimental_Analysis.py
 ```
+---
+
+### 📸 Screenshots 
+
+**🔹 Home Page**
+
+![WhatsApp Image 2025-09-14 at 18 03 20_5a290444](https://github.com/user-attachments/assets/ac909e3a-d257-499a-bae3-ebe5f7f85619)
+
+**🔹 Analysis Page**
+
+![WhatsApp Image 2025-09-14 at 18 04 58_195e0629](https://github.com/user-attachments/assets/882ac8c8-b2ea-4fdb-a817-4ea7fae71d6e)
+![WhatsApp Image 2025-09-14 at 18 09 10_b7e98ee3](https://github.com/user-attachments/assets/21251036-9699-4f4e-9103-1326166c99d2)
+
+**🔹 Visualizations**
+
+![WhatsApp Image 2025-09-14 at 18 09 31_460bc88f](https://github.com/user-attachments/assets/f88ed3c5-31e2-468a-9c83-15eab9024f99)
+![WhatsApp Image 2025-09-14 at 18 09 51_809adc95](https://github.com/user-attachments/assets/0a2e659a-22bf-45f5-a6b2-88355ce824df)
+
+**🔹 History Page**
+
+![WhatsApp Image 2025-09-14 at 18 10 18_e19a3a78](https://github.com/user-attachments/assets/d647ff9c-b9bd-4762-8054-eaddcfe3adff)
+
+### 👩‍💻 Team / Authors
+**Team Name:TEAM MUFASA**
+
+**Hackathon Team Members:**  
+1. K.P.N.S.Rama Karthik  
+2. J. Venkata Shailesh  
+3. R. Sathvika  
+4. A. Nikhitha  
+5. B. Thrisha  
+6. A. Hema Sri Satya Latha  
