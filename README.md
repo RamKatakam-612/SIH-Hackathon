@@ -107,4 +107,9 @@ streamlit run Sentimental_Analysis.py
 3. R. Sathvika  
 4. A. Nikhitha  
 5. B. Thrisha  
-6. A. Hema Sri Satya Latha  
+6. A. Hema Sri Satya Latha
+   
+## 🚀 Live Demo
+
+Check out the deployed app here: [sih-hackathon-mufasa.streamlit.app](https://sih-hackathon-mufasa.streamlit.app)
+
