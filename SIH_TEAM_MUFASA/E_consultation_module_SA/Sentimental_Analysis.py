@@ -33,7 +33,7 @@ if css_path.exists():
     st.markdown(f"<style>{css_path.read_text()}</style>", unsafe_allow_html=True)
 
 # Page config
-st.set_page_config(page_title="MCA E-Consultation Sentiment Analyzer", layout="wide", page_icon="mca.png")
+st.set_page_config(page_title="MCA E-Consultation Sentiment Analyzer", layout="wide", page_icon="WhatsApp Image 2025-09-14 at 22.09.21_791db4c3.jpg")
 # -------------------------------
 # Preprocessing function
 # -------------------------------
@@ -543,5 +543,6 @@ elif st.session_state.page == "About":
         </ul>
     </div>
     """, unsafe_allow_html=True)
+
 
 
