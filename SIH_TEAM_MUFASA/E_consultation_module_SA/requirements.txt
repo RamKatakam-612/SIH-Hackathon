@@ -1,0 +1,10 @@
+streamlit==1.29.0
+matplotlib==3.7.1
+wordcloud==1.9.2
+textblob==0.17.1
+transformers==4.30.2
+torch==2.0.1
+nltk==3.8.1
+pymongo==4.3.3
+pandas==1.5.3
+beautifulsoup4==4.12.2
