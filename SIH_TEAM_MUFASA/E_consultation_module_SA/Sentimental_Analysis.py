@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import os
 import os
 import nltk
-
+nltk.download('wordnet')
 NLTK_DATA_DIR = os.path.join(os.path.dirname(__file__), "nltk_data")
 nltk.data.path.append(NLTK_DATA_DIR)
 
@@ -548,6 +548,7 @@ elif st.session_state.page == "About":
         </ul>
     </div>
     """, unsafe_allow_html=True)
+
 
 
 
