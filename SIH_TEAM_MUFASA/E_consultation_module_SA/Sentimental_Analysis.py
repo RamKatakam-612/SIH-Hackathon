@@ -3,8 +3,22 @@
 
 import streamlit as st
 import matplotlib.pyplot as plt
-from wordcloud import WordCloud
+import os
 import nltk
+
+# Create a writable cache directory on Streamlit Cloud
+NLTK_DIR = os.path.join(os.getcwd(), 'nltk_cache')
+os.makedirs(NLTK_DIR, exist_ok=True)
+nltk.data.path.append(NLTK_DIR)
+
+# Download only if not already present
+for pkg in ['wordnet', 'omw-1.4', 'punkt']:
+    try:
+        nltk.data.find(f'corpora/{pkg}')
+    except LookupError:
+        nltk.download(pkg, download_dir=NLTK_DIR)
+
+from wordcloud import WordCloud
 from textblob import TextBlob
 from transformers import pipeline
 from datetime import datetime
@@ -540,6 +554,7 @@ elif st.session_state.page == "About":
         </ul>
     </div>
     """, unsafe_allow_html=True)
+
 
 
 
