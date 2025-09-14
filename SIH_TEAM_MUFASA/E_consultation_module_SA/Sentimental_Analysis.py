@@ -20,7 +20,7 @@ from bs4 import BeautifulSoup
 # -------------------------------
 # MongoDB Connection
 # -------------------------------
-MONGO_URI = "mongodb://localhost:27017"   # replace with Atlas URI if cloud
+MONGO_URI = "mongodb+srv://hrtechsofficial_db_user:cu3O2VvGu4Plrbpw@cluster0.vty9ibx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"   # replace with Atlas URI if cloud
 client = pymongo.MongoClient(MONGO_URI)
 db = client["sentiment_dashboard"]
 collection = db["analyses"]
@@ -543,6 +543,7 @@ elif st.session_state.page == "About":
         </ul>
     </div>
     """, unsafe_allow_html=True)
+
 
 
 
