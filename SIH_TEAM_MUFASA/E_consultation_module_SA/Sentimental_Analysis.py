@@ -124,7 +124,7 @@ if st.session_state.page == "Analysis":
 
         try:
             import os
-            base_path = os.path.dirname(file)
+            base_path = os.path.dirname(__file__)
             csv_path = os.path.join(base_path, "imdb_sample.csv")
             imdb_df = pd.read_csv(csv_path)
             #imdb_df = pd.read_csv("imdb_sample.csv")
@@ -543,4 +543,5 @@ elif st.session_state.page == "About":
         </ul>
     </div>
     """, unsafe_allow_html=True)
+
 
