@@ -123,7 +123,11 @@ if st.session_state.page == "Analysis":
         st.info("📥 Using IMDB scraped data from notebook...")
 
         try:
-            imdb_df = pd.read_csv("imdb_sample.csv")
+            import os
+            base_path = os.path.dirname(file)
+            csv_path = os.path.join(base_path, "imdb_sample.csv")
+            imdb_df = pd.read_csv(csv_path)
+            #imdb_df = pd.read_csv("imdb_sample.csv")
 
             if "date" not in imdb_df.columns:
                 st.error("❌ 'date' column not found in IMDB dataset.")
@@ -539,3 +543,4 @@ elif st.session_state.page == "About":
         </ul>
     </div>
     """, unsafe_allow_html=True)
+
