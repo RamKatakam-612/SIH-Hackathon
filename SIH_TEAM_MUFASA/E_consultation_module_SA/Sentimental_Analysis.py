@@ -16,6 +16,15 @@ import pathlib
 import re
 import string
 from bs4 import BeautifulSoup
+
+# -------------------------------
+# MongoDB Connection
+# -------------------------------
+MONGO_URI = "mongodb://localhost:27017"   # replace with Atlas URI if cloud
+client = pymongo.MongoClient(MONGO_URI)
+db = client["sentiment_dashboard"]
+collection = db["analyses"]
+
 # -------------------------------
 # Load CSS
 # -------------------------------
@@ -59,7 +68,7 @@ st.markdown("""
     <a href="?page=Home" style="color:white;margin-right:20px;text-decoration:none;font-weight:bold;">🏠 Home</a>
     <a href="?page=Analysis" style="color:white;margin-right:20px;text-decoration:none;font-weight:bold;">📝 Analysis</a>
     <a href="?page=History" style="color:white;margin-right:20px;text-decoration:none;font-weight:bold;">📂 History</a>
-    <a href="?page=About" style="color:white;text-decoration:none;font-weight:bold;">ℹ️ About</a>
+    <a href="?page=About" style="color:white;text-decoration:none;font-weight:bold;">ℹ About</a>
 </div>
 """, unsafe_allow_html=True)
 
@@ -152,7 +161,7 @@ if st.session_state.page == "Analysis":
 
                 if st.button("✅ Apply Filter"):
                     if start_date > end_date:
-                        st.warning("⚠️ Start date cannot be after end date.")
+                        st.warning("⚠ Start date cannot be after end date.")
                         st.session_state.comments = []
                         st.session_state.date_filter_applied = False
                     else:
@@ -175,7 +184,7 @@ if st.session_state.page == "Analysis":
                 if st.session_state.date_filter_applied:
                     comments = st.session_state.comments
                 else:
-                    st.info("👈 Select date range and click **Apply Filter** to load comments.")
+                    st.info("👈 Select date range and click *Apply Filter* to load comments.")
                     comments = []
 
         except Exception as e:
@@ -326,7 +335,7 @@ if st.session_state.page == "Analysis":
                     summaries.append(final_summary)
 
             except Exception as e1:
-                st.warning(f"⚠️ Primary summarizer failed: {e1}")
+                st.warning(f"⚠ Primary summarizer failed: {e1}")
                 try:
                     chunks = split_text_into_chunks(comment)
                     chunk_summaries = [
@@ -409,7 +418,7 @@ elif st.session_state.page == "History":
     st.markdown("## 📂 Analysis History")
 
     # 🔴 DELETE OPTION
-    with st.expander("🗑️ Delete History", expanded=False):
+    with st.expander("🗑 Delete History", expanded=False):
         st.warning("This will permanently delete all saved analyses from the database.")
         if st.button("❌ Confirm Delete All History"):
             try:
@@ -521,7 +530,7 @@ elif st.session_state.page == "History":
 elif st.session_state.page == "About":
     st.markdown("""
     <div style="background-color:#e6f2ff;padding:20px;border-radius:10px;margin-top:20px;">
-        <h2 style="color:#003366;">ℹ️ About This App</h2>
+        <h2 style="color:#003366;">ℹ About This App</h2>
         <ul>
             <li>Built with <b>Streamlit</b></li>
             <li>NLP: <b>TextBlob, HuggingFace Transformers, WordCloud</b></li>
@@ -530,12 +539,3 @@ elif st.session_state.page == "About":
         </ul>
     </div>
     """, unsafe_allow_html=True)
-
-
-
-
-
-
-
-
-
