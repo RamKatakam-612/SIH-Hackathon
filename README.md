@@ -96,7 +96,7 @@ streamlit run Sentimental_Analysis.py
 ![WhatsApp Image 2025-09-14 at 18 10 18_e19a3a78](https://github.com/user-attachments/assets/d647ff9c-b9bd-4762-8054-eaddcfe3adff)
 
 ### 👩‍💻 Team / Authors
-**Team Name:TEAM MUFASA**
+**Team Name: TEAM MUFASA**
 
 **Hackathon Team Members:**  
 1. K.P.N.S.Rama Karthik  
