@@ -94,6 +94,7 @@ if st.session_state.page == "Home":
 def clean_review(text):
     return text.strip()
 
+
 # -------------------------------
 # ANALYSIS
 # -------------------------------
@@ -119,15 +120,15 @@ if st.session_state.page == "Analysis":
                                   "Implementation details are unclear and confusing.")
         date_input = st.date_input("Select Date", datetime.today())
         comments = [clean_review(c) for c in user_input.split("\n") if c.strip()]
+
     elif analysis_mode == "IMDB Data":
         st.info("📥 Using IMDB scraped data from notebook...")
 
         try:
             import os
-            base_path = os.path.dirname(__file__)
+            base_path = os.path.dirname(_file_)
             csv_path = os.path.join(base_path, "imdb_sample.csv")
             imdb_df = pd.read_csv(csv_path)
-            #imdb_df = pd.read_csv("imdb_sample.csv")
 
             if "date" not in imdb_df.columns:
                 st.error("❌ 'date' column not found in IMDB dataset.")
@@ -140,22 +141,10 @@ if st.session_state.page == "Analysis":
 
                 st.markdown("### 🔍 Filter by Date Range")
 
-                # Use session_state to persist dates
-                start_date = st.date_input(
-                    "📅 Start Date",
-                    min_value=min_date,
-                    max_value=max_date,
-                    value=st.session_state.get("start_date", min_date),
-                    key="start_date"
-                )
-
-                end_date = st.date_input(
-                    "📅 End Date",
-                    min_value=min_date,
-                    max_value=max_date,
-                    value=st.session_state.get("end_date", max_date),
-                    key="end_date"
-                )
+                start_date = st.date_input("📅 Start Date", min_value=min_date, max_value=max_date,
+                                           value=st.session_state.get("start_date", min_date), key="start_date")
+                end_date = st.date_input("📅 End Date", min_value=min_date, max_value=max_date,
+                                         value=st.session_state.get("end_date", max_date), key="end_date")
 
                 if "comments" not in st.session_state:
                     st.session_state.comments = []
@@ -184,26 +173,15 @@ if st.session_state.page == "Analysis":
                         if not filtered_df.empty:
                             date_input = filtered_df["date"].iloc[0].date()
 
-                # Use filtered comments or show instruction
-                if st.session_state.date_filter_applied:
-                    comments = st.session_state.comments
-                else:
-                    st.info("👈 Select date range and click *Apply Filter* to load comments.")
-                    comments = []
+                comments = st.session_state.comments if st.session_state.date_filter_applied else []
 
         except Exception as e:
             st.error(f"❌ Error loading or processing IMDB data: {e}")
 
-
-
-
-
-
-        # -------------------------------
-        # Sentiment Analysis
-        # -------------------------------
+    # -------------------------------
+    # Sentiment Analysis
+    # -------------------------------
     if st.button("🚀 Analyze") and comments:
-
         sentiments, pos, neg, neu = [], 0, 0, 0
         for c in comments:
             polarity = TextBlob(c).sentiment.polarity
@@ -216,10 +194,7 @@ if st.session_state.page == "Analysis":
             else:
                 sentiments.append("Neutral")
                 neu += 1
-                
-        # -------------------------------
-        # Sentiment Count Display
-        # -------------------------------
+
         st.markdown(f"""
         <div style="background-color:#dff0d8;padding:10px;border-radius:6px;margin-top:20px;">
             <b>Sentiment Counts:</b>
@@ -228,31 +203,20 @@ if st.session_state.page == "Analysis":
             <span style="color:gray;">Neutral: {neu}</span>
         </div>
         """, unsafe_allow_html=True)
-        from transformers import pipeline, AutoTokenizer, AutoModelForSeq2SeqLM
-        import streamlit as st
 
         # ------------------------
-        # Load Summarizers Once
+        # Load Single Lightweight Summarizer (cached)
         # ------------------------
         @st.cache_resource
-        def load_summarizers():
-            primary_model = AutoModelForSeq2SeqLM.from_pretrained("facebook/bart-large-cnn")
-            primary_tokenizer = AutoTokenizer.from_pretrained("facebook/bart-large-cnn")
-            summarizer_primary = pipeline("summarization", model=primary_model, tokenizer=primary_tokenizer)
+        def load_summarizer():
+            return pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
 
-            fallback_model = AutoModelForSeq2SeqLM.from_pretrained("sshleifer/distilbart-cnn-12-6")
-            fallback_tokenizer = AutoTokenizer.from_pretrained("sshleifer/distilbart-cnn-12-6")
-            summarizer_fallback = pipeline("summarization", model=fallback_model, tokenizer=fallback_tokenizer)
-
-            return summarizer_primary, summarizer_fallback
-
-        summarizer_primary, summarizer_fallback = load_summarizers()
+        summarizer = load_summarizer()
 
         # ------------------------
         # Helper Functions
         # ------------------------
         def split_text_into_chunks(text, max_chunk_chars=900):
-            """Split long text into smaller chunks based on sentence boundaries."""
             sentences = text.split('. ')
             chunks, current_chunk = [], ""
             for sentence in sentences:
@@ -266,7 +230,6 @@ if st.session_state.page == "Analysis":
             return chunks
 
         def dynamic_summary_length(word_count):
-            """Determine summary length bounds dynamically."""
             if word_count < 30:
                 return None
             elif word_count < 50:
@@ -280,19 +243,18 @@ if st.session_state.page == "Analysis":
             else:
                 return (120, 200)
 
-        def generate_summary(comment, primary=True, min_len=40, max_len=80):
-            """Summarize given text using the specified model."""
-            summarizer = summarizer_primary if primary else summarizer_fallback
-            result = summarizer(comment, min_length=min_len, max_length=max_len, do_sample=False, truncation=True)
+        def generate_summary(comment, min_len=40, max_len=80):
+            result = summarizer(comment, min_length=min_len, max_length=max_len,
+                                do_sample=False, truncation=True)
             return result[0]["summary_text"]
 
         # ------------------------
         # Summarization Loop
         # ------------------------
-
         summaries = []
+        progress = st.progress(0)
 
-        for comment in comments:
+        for idx, comment in enumerate(comments, start=1):
             comment = comment.strip()
             if not comment:
                 summaries.append("[Empty comment]")
@@ -300,62 +262,32 @@ if st.session_state.page == "Analysis":
 
             try:
                 word_count = len(comment.split())
-
-                # Token count might fail if tokenizer is not exposed, catch it
-                try:
-                    token_count = summarizer_primary.tokenizer(comment, return_tensors="pt")["input_ids"].shape[1]
-                except:
-                    token_count = 0
-
-                # Determine length range for summarization
                 length_range = dynamic_summary_length(word_count)
 
-                # Too short to summarize? Return as-is
-                if length_range is None and token_count <= 1024:
+                if length_range is None:
                     summaries.append(comment)
                     continue
 
-                # If short, assign a fallback range
-                if length_range is None:
-                    length_range = (20, 40)
-
                 min_len, max_len = length_range
 
-                if token_count <= 1024:
-                    summary = generate_summary(comment, primary=True, min_len=min_len, max_len=max_len)
+                if word_count < 512:
+                    summary = generate_summary(comment, min_len=min_len, max_len=max_len)
                     summaries.append(summary)
                 else:
-                    # Too long: split → summarize chunks → re-summarize
                     chunks = split_text_into_chunks(comment)
-                    chunk_summaries = [
-                        generate_summary(chunk, primary=True, min_len=40, max_len=80)
-                        for chunk in chunks
-                    ]
+                    chunk_summaries = [generate_summary(chunk, min_len=40, max_len=80) for chunk in chunks]
                     combined_summary = " ".join(chunk_summaries)
-                    combined_word_count = len(combined_summary.split())
-                    combined_range = dynamic_summary_length(combined_word_count) or (60, 100)
-                    final_summary = generate_summary(combined_summary, primary=True,
-                                                    min_len=combined_range[0], max_len=combined_range[1])
+                    combined_wc = len(combined_summary.split())
+                    combined_range = dynamic_summary_length(combined_wc) or (60, 100)
+                    final_summary = generate_summary(combined_summary,
+                                                     min_len=combined_range[0], max_len=combined_range[1])
                     summaries.append(final_summary)
 
-            except Exception as e1:
-                st.warning(f"⚠ Primary summarizer failed: {e1}")
-                try:
-                    chunks = split_text_into_chunks(comment)
-                    chunk_summaries = [
-                        generate_summary(chunk, primary=False, min_len=40, max_len=80)
-                        for chunk in chunks
-                    ]
-                    combined_summary = " ".join(chunk_summaries)
-                    combined_word_count = len(combined_summary.split())
-                    combined_range = dynamic_summary_length(combined_word_count) or (60, 100)
-                    final_summary = generate_summary(combined_summary, primary=False,
-                                                    min_len=combined_range[0], max_len=combined_range[1])
-                    summaries.append(final_summary)
+            except Exception as e:
+                st.error(f"❌ Error summarizing: {e}")
+                summaries.append("[Error summarizing comment]")
 
-                except Exception as e2:
-                    st.error(f"❌ Fallback summarizer also failed: {e2}")
-                    summaries.append("[Error summarizing comment]")
+
 
 
         # -------------------------------
@@ -543,8 +475,3 @@ elif st.session_state.page == "About":
         </ul>
     </div>
     """, unsafe_allow_html=True)
-
-
-
-
-
